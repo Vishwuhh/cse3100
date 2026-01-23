@@ -9,7 +9,7 @@ int main(void) {
        Calculate the sum of positive even integers below 200.
        Expected output: 9900
     */
-    printf("Hello, World!\n");
+    // printf("Hello, World!\n");
 
     int even_sum = 0;
     int j = 2; 
@@ -18,7 +18,7 @@ int main(void) {
         even_sum += j;
         j += 2; 
     }
-    printf("%d\n", even_sum);
+    // printf("%d\n", even_sum);
   
     /* int i, n, sum;
     sum = 0;
