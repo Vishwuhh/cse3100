@@ -19,12 +19,7 @@ int main(void) {
         j += 2; 
     }
     printf("%d\n", even_sum);
-
-    /* Code for Thought Section:
-       Original loop commented out as per instructions.
-       Smallest n causing overflow (n=100,000) identified.
-    */
-    
+  
     /* int i, n, sum;
     sum = 0;
     printf("Enter n:\n");
