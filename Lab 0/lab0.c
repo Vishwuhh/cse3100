@@ -11,6 +11,6 @@ int main(void)
     }
 
     printf("Hello, World!\n");
-    printf("The sum is: %i\n", sum);
+    printf("%i\n", sum);
     return 0;
 }
