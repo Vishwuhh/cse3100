@@ -10,7 +10,7 @@ int main(void)
         num += 2;
     }
 
-    printf("Hello World!\n");
+    printf("Hello, World!\n");
     printf("The sum is: %i\n", sum);
     return 0;
 }
