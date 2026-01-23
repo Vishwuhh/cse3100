@@ -32,7 +32,6 @@ int main(void) {
     printf("Sum from 1 to %d = %d\n", n, sum); 
     */
 
-    // Corrected code segment: changed print to printf and updated N
     int N = 100000;
     printf("Among 1, 10, 100, 1000, 10000, 100000, 1000000\n");
     printf("The smallest number to break the code is %d\n", N);
