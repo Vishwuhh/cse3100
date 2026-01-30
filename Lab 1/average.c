@@ -11,7 +11,7 @@ int main(void) {
         count += 1;
         total += x;
         average = total/count;
-    }
 
-    printf("Total=%f Average=%f\n", total, average); // prints the running total and average
+        printf("Total=%f Average=%f\n", total, average); // prints the running total and average
+    }
 }
