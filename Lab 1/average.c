@@ -12,7 +12,7 @@ int main(void) {
         total += x;
         average = total/count;
 
-        printf("Total %f Average = %f\n", total, average); // prints the running total and average
+        printf("Total=%f Average=%f\n", total, average); // prints the running total and average
     }
     return 0;
 }
