@@ -9,9 +9,10 @@ int main(void) {
 
     while (scanf("%lf", &x) == 1) { // checks if the input is a double
         count += 1;
-        total = x;
+        total += x;
         average = total/count;
 
-        printf("Total=%f Average=%f\n", total, average); // prints the running total and average
+        printf("Total %f Average = %f\n", total, average); // prints the running total and average
     }
+    return 0;
 }
