@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/vishwabalamurugan/Documents/GitHub/cse3100/Lab 1/average'
+relocations:     []
+...

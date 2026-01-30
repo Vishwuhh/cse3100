@@ -7,10 +7,10 @@ int main(void) {
     double average = 0.0; // solution when dividing total by number of inputs
     int count = 0; // number of inputs
 
-    while (scanf("%lf", &x == 1)) { // checks if the input is a double
+    while (scanf("%lf", &x) == 1) { // checks if the input is a double
         count += 1;
         total += x;
-        average += total/count;
+        average = total/count;
     }
 
     printf("Total=%f Average=%f\n", total, average); // prints the running total and average
