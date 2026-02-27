@@ -12,10 +12,12 @@ long catalan_number(int n)
         return 0;
     }
 
-    long cat_num = 1;
-    int k = 1;
+    long cat_num = 1; // base case since C_0 is one
+    int k = 1; // sets k = 1 for loop
     
-    while(k <= n) {
+    // could also be a for-loop if int k isnt defined BEFORE the loop
+    // for(int k = 1, k <= n, k++)
+    while(k <= n) { // goes up to n to build sequence
         cat_num = ((cat_num * (4*k - 2)/(k+1)));
         k++;
     }
