@@ -37,20 +37,19 @@
 #include <stdio.h>
 
 int main(void) {
-	int i, n, sum;
-	sum = 0;
-	printf("Enter n:\n");
-	scanf("%d", &n);
-	i = 1;
-	while (i <= n) {
-		sum = sum + i;
-		i = i + 1;
-	}
-	printf("Sum from 1 to %d = %d\n", n, sum);
+	long long sum; // changed to long long to prevent overflow due to large values
+    int i, n;
+    sum = 0;
+    printf("Enter n:\n"); 
+    scanf("%d", &n); // need to still read 'n' as a standard int
+    i = 1;
+    while (i <= n) {
+        sum = sum + i;
+        i = i + 1;
+    }
+    // Changed format specifier to %lld for long long since sum is now long long
+    printf("Sum from 1 to %d = %lld\n", n, sum); 
 
-//	int N = 1000;
-//	print("Among 1, 10, 100, 1000, 10000, 100000, 1000000\n");
-//	print("The smallest number to break the code is %d\n", N);
-	return 0;
+    return 0;
 }
 

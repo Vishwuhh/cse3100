@@ -23,12 +23,13 @@ typedef struct node_tag
     unsigned int    id;   
     char   name[NAME_SIZE];
 } person_t;
-
-// TODO
-// implement a function to swap two (int *)
-// add two paramters of correct types 
-// the function does not return a value
-// void    swap_pointer_int();
+// int** is used since we are swapping addresses stored inside the int* variables
+void swap_pointer_int(int **p1, int **p2) { 
+    // temp is an int* since it holds the memory addresses we are swapping
+    int *temp = *p1; // *p1 dereferences the pointer to grab the actual pointer from caller
+    *p1 = *p2;
+    *p2 = temp;
+}
 
 void test_swap_pointer_int(int argc, char *argv[])
 {
@@ -42,24 +43,22 @@ void test_swap_pointer_int(int argc, char *argv[])
         b = atoi(argv[2]);
 
     printf("Before swap\n");
-    // you can print the value of pointers, if you like
-    // but submission should not print pointers
-    // printf(" pa is %p,  pb is %p\n",  pa,  pb);
     printf("*pa is %d, *pb is %d\n", *pa, *pb);
 
-    // TODO 
-    // one line to call swap_point_int() to swap pa and pb
+    swap_pointer_int(&pa, &pb); // need to pass the address of pa and pb using & operator since it expects int** addreses
 
     printf("After swap\n");
-    // printf(" pa is %p,  pb is %p\n",  pa,  pb);
     printf("*pa is %d, *pb is %d\n", *pa, *pb);
 }
 
-// TODO
-// implement a function to swap two structures of type person_t
-// add two paramters of correct types 
-// the function does not return a value
-// void    swap_person();
+void swap_person(person_t *p1, person_t *p2) { // using persion_t* to point to the original structures in memory
+    // *p1 dereferences the pointer and grabs the whole structure block, and is then saved into a struct variable
+    person_t temp = *p1;
+    // overwrites the first structure block with the second strucutre block
+    *p1 = *p2;
+    // puts the saved block into the second structure
+    *p2 = temp;
+};
 
 void test_swap_person(int argc, char *argv[])
 {
@@ -80,8 +79,7 @@ void test_swap_person(int argc, char *argv[])
     printf("x's id is %d, x's name is %s\n", x.id, x.name);
     printf("y's id is %d, y's name is %s\n", y.id, y.name);
 
-    // TODO 
-    // one line to call swap_person() to swap x and y
+    swap_person(&x, &y); // passes the addresses of the structures using the & operator
     
     printf("After swap\n");
     printf("x's id is %d, x's name is %s\n", x.id, x.name);

@@ -12,21 +12,19 @@ int main()
 {
 	int i, j, n;
 
-	//We assume the smallest such n is no more than 1000000
-	for(n=1; n<=1000000; n++)
+	for(n=1; n<=1000000; n++) // assumes smallest n is no larger than 1000000
 	{
-		//Use count to record the number of different ways of summing two positive cube numbers to n
-		int count = 0;
-		//TO DO
-		//Fill in code below
-
-
-
-
-
-
-
-
+		int count = 0; // records the number of different numbers
+		for (i = 1; i * i * i < n; i++) { // bound the i loop
+		    for (j = i; i * i * i + j * j * j <= n; j++) { // start j at i to prevent duplicates amd bound j so it stops when sum exceeds n
+		        if (i * i * i + j * j * j == n) { // increments count only if i^3 + j^3 is equal to n
+		            count++;
+		        }
+		    }
+		}
+		if (count >= 2) { // shatters loop
+		    break; // Early exit once we find the smallest n
+		}
 	}
 
 
