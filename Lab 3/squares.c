@@ -23,6 +23,8 @@ int sum(int n, int* arr)
 void fillSquares(int n, int* arr)
 {
     int i;
+    // sum() function starts adding from whatever is in index 0
+    // need to intialize arr[0] to be 0 because of this, or it would add garbage data
     for(i = 0; i < n; i++)
         arr[i] = (i*1) * (i*1);
 }

@@ -114,21 +114,26 @@ node *delete_node(node *head, int v) {
 
   // Case 1: The node to be deleted is the head node.
   if (head->v == v) {
+    // need to save the address of the second node before destroying the first one
     node *temp = head;
     head = head->next;
-    free(temp);
-    return head;
+    free(temp); // frees the old head to stop memory leaks 
+    return head; // returns the poiter to the head node of the new list
   }
 
   // Case 2: The node to be deleted is somewhere else in the list.
-  node *current = head;
+  node *current = head; // looks ahead using one pointer and the node in front of it
+  // if current->next is NULL, it is the very last node, so the loop stops before the end of the list
   while (current->next != NULL) {
+    // checks if we found the target one step ahead of where we are in
     if (current->next->v == v) {
-      node *temp = current->next;
+      node *temp = current->next; // saves the address of the doomed node
+      // current node will point to the node after the doomed node
       current->next = current->next->next;
-      free(temp);
-      return head;
+      free(temp); // destroy the doomed node
+      return head; // return the original head
     }
+    // go forward in the change
     current = current->next;
   }
 
@@ -145,20 +150,23 @@ node *delete_node(node *head, int v) {
  * Return value is a pointer to the new head node.
  */
 node *reverse_list(node *head) {
+  // forbidden to allocate new nodes, so we need to use just these three
   node *prev = NULL;
   node *current = head;
   node *next = NULL;
 
   while (current != NULL) {
     // Store the next node before overwriting the current node's pointer
+    // skipping leads to the rest of the list floating away into an ERROR
     next = current->next;
     
     // Reverse the link
+    // current node stops pointing forward, and now points backwards to 'prev'
     current->next = prev;
     
     // Move the prev and current pointers one step forward
-    prev = current;
-    current = next;
+    prev = current; // moves 'prev' node to where we currently are
+    current = next; // moves where we are up one node so prev is still behind us
   }
   
   // 'prev' will be pointing to the new head of the reversed list
