@@ -23,7 +23,10 @@ int main()
 	sum = 0;
 	for(i=0; i<=n; i++)
 	{
-		sum += 8/(4*i + 1)/(4*i + 3);
+		// sum += 8/(4*i + 1)/(4*i + 3); 
+		// the 8 causes there to be issues with the calculation since the int operations truncates the decimals
+
+		sum += 8.0/(4*i + 1)/(4*1 + 3); // the 8.0 forces the calculation to promote the int denominator into a double
 	}
 	//print out the sum. 
 	//Note how we set the format to only two digits after the decimal point 

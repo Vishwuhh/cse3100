@@ -9,23 +9,22 @@
 #include <stdlib.h>
 #include <assert.h>
 
-//TO DO
-//Implement a function named cum_prob below.
-//This function takes an integer k, and a long integer trials as inputs.
-//This function returns a double value.
-//In the fucntion, we toss the 3 dice multiple times. The number of tosses is trials.
-//We count the number of times that the outcomes of the 3 dice add up to at least k.
-////And we then use this number and trials to calculate the probability that 
-//the sum of the 3 dice is at least k.
-//Finally, we return this probablity. 
-
-
-
-
-
-
-
-
+double cum_prob(int k, long trials) {
+    long count = 0;
+    
+    for (long i = 0; i < trials; i++) {
+		// the plus 1 makes sure that the range is [1-6] instead of [0-5]
+        int die1 = rand() % 6 + 1; 
+        int die2 = rand() % 6 + 1;
+        int die3 = rand() % 6 + 1;
+        
+        if (die1 + die2 + die3 >= k) { // number of times the rolls exceed a number
+            count++; 
+        }
+    }
+    
+    return (double)count / trials; // forces the result to be a decimal (for probability)
+}
 
 //Do not change the following code.
 int main()
