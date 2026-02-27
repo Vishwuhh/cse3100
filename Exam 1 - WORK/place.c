@@ -20,7 +20,7 @@ int integerCompare(const void *a, const void *b) {
 
   // if reuturning negative, val1 is smaller
   // if returning positive, val2 is bigger
-  return val1 - val2; 
+  return val2 - val1; 
 }
 
 int main(int argc, char *argv[]) {
