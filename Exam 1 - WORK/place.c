@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  qsort(&argv[1], argc - 1, sizeof(char *), integerCompare);
+  qsort(&argv[1], argc - 1, sizeof(char *), integerCompare); // from stdlib.h
 
   print_elements(&argv[1], argc - 1);
 
