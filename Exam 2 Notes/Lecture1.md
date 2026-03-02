@@ -128,6 +128,37 @@ pid_t waitpid(pid_t pid, int *status, int options)
 - parent and child might have same information, but have **different memory locations**
     - stored in virtual memory
         - to safeguard actual RAM and memories
+```C
+#include <stdio.h>
+#include <unistd.h>
+int main() {
+  int a = 0;
+  if (fork() == 0) {
+    a++;
+    printf("Child process: a = %10d, &a = %p\n", a, &a);
+  } else {
+    a--;
+    printf("Parent process: a = %10d, &a = %p\n", a, &a);
+  }
+  return 0;
+}
+```
+- example of memory divergence
+  - the child increments its local version of a, but the parent *decrements* its a
+    - both originally had the same values
+#### Paradox of the Memory Address (&a)
+- the *hexadecimal address* is the same for both parent and child
+  - address %p prints the **virtual address* instead of the physical RAM location
+    - since the child is a clone, its virtual address is mapped identically to its parent
+      - **they think that a is in the same spot on *both* maps**
+  - OS page table would map these virtual addresses to **different physical locations** on the RAM 
+
+| Process | Value of a | Memory Address (&a) |
+| --- | --- | --- |
+| Child | 1 | 0x7ffee123 |
+| Parent | -1 | 0x7ffee123 |
+
+
 
 # Summary
 - a = fork()
@@ -141,8 +172,8 @@ pid_t waitpid(pid_t pid, int *status, int options)
 #include <unistd.h>
 
 int main() {
-  int a = fork();
-  int b = fork();
+  int a = fork(); // part 1
+  int b = fork(); // part 2
 
   printf("a = %d,b=%d,pid = %d\n", a, b, getpid());
   if (a > 0 && b > 0) {
@@ -164,3 +195,133 @@ int main() {
   return 0;
 }
 ```
+- forking operations
+  -  first fork()
+     - for int a, clones the original proccess leaving **two processes** active
+  - second fork()
+      - for int b, clones the two processes from 1 into **four processes** in total
+- proccess identification
+  - Parent
+    - fork() returns the PID of the *child*, which is a value > 0
+  - Child
+    - fork() returns zero
+- waitpid()
+  - ensures that process 1 stays active *until* the children finish
+  
+| Process | Variable a | Variable b | Description |
+| --- | --- | --- | --- |
+| Process 1 | > 0 (PID of P2) | > 0 (PID of P3) | Original Parent |
+| Process 2 | 0 | > 0 (PID of P4) | First fork; parent of P4 |
+| Process 3 | 0 (PID of P2) | 0 | Second fork from P1 |
+| Process 4 | 0 | 0 | Second fork from P2 |
+
+```C
+#include <stdio.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+int main() {
+  printf("This is a demonstration\n"); // beginning of code
+  int a = fork();
+  if (a == 0) {
+    printf("This is in child process\n");
+    printf("Child process id = %d\n", getpid());
+  }
+  if (a > 0) {
+    printf("This is in parent process\n");
+    waitpid(a, NULL, 0);
+    printf("Parent process id = %d\n", getpid());
+  }
+
+  printf("Bye!\n");
+  return 0;
+}
+```
+- intialization
+  - the program starts as a single process and prints "This is a demonstration"
+- fork() call   
+  - proccess clones itself, with both proccesses return from fork() **concurrently**
+    - parent 
+      - a contains the Process ID of the child (value > 0)
+    - child 
+      - a is exactly zero
+  - child branch (when a == 0)
+    - child enters the first if block
+      - prints "this is in a child process" and its PID with *getpid()*
+    - skips the if(a > 0) block and prints "Bye!" before exiting 
+  - parent branch (when a > 0)
+    - parent enters the second if block
+      - prints "this is in parent proccess" 
+      - waitpid(a, NULL, 0)
+        - pauses at this line until the child process terminates
+    - once child dies, the parent is unblocked
+      - prints its PID and then prints "Bye!"
+
+- key observations
+  - **order of output** is sealed with waitpid() for the parent
+    - ensures that the child's output is always first
+    - would be *random* if waitpid() wasn't used 
+  - while the child is a clone, because it is attached to a different virtual memory address, any changes to parent **only affects the parent**
+  - parent is able to "reap" the child proccess, with helps stop the child from being a zombie
+  
+## Fork Treasure Hunt 
+```C
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[]) {
+
+  if (argc != 2) {
+    printf("Usage: %s n\n", argv[0]);
+    return -1;
+  }
+
+  int n = atoi(argv[1]);
+  assert(n >= 1 && n <= 10);
+
+  int *a = calloc(n, sizeof(int)); // allocates array a of size n with calloc (all elements are zero)
+
+  srand(12345);
+  int idx = rand() % n; // picks random idx and sets a[idx] = 1 (the treasure)
+  pid_t pid = getpid(); 
+  printf("Treasure hidden at %d in array %p pid = %d\n", idx, a, pid); // prints memory address of the array %p and the current proccess id getpid()
+  a[idx] = 1;
+
+  int cur = 0;
+
+  for (int i = 0; i < n; i++) { // runs up to n times, with a fork() happening every increment of n
+    pid_t pid;
+    pid = fork();
+    if (pid == 0) { // child proccess starts as an exact copy of parent 
+      if (a[cur]) { // checks array at the current index a[cur]
+        printf(
+            "Systematic search found the treasure at %d in array %p pid = %d\n",
+            cur, a, getpid()); // prints the message of success and stops loop
+        break;
+        ;
+      }
+      cur++; // increments cur and continutes to the next iteration and fork --> child has its own copy of the cur variable 
+    } else {
+      // wait for the child process to finish
+      waitpid(pid, NULL, 0);
+      int guess = rand() % n;
+      if (a[guess]) {
+        printf("Random search found the treasure at %d in array %p pid = %d\n",
+               guess, a, getpid());
+        break;
+        ;
+      }
+    }
+  }
+  free(a);
+  return 0;
+}
+```
+- key takeaway
+  - systematic search is performed through a **chain of descendants**
+    - process 1 creates process 2 (checks index 0), ... , process n creates process (n+1) for index (n-1)
+  
