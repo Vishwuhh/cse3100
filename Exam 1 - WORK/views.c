@@ -58,7 +58,8 @@ void freeSet(BuildingSet **b) {
     removeFromSet(b);
   }
 }
-// montonic stack problem, need to find which buildings cast a shadow
+// montonic stack problem, need to find which buildings cast a shadow onto one another
+// building is popped from stack only if it is shorter than the new building being proccessed
 BuildingSet *checkViews(int *input, int count, int position) {
   BuildingSet *b = NULL;
 
@@ -73,6 +74,7 @@ BuildingSet *checkViews(int *input, int count, int position) {
     }
   } else {
     // similar logic, but starts from the far left or beginning of series of buildings
+    // perspective is from the light, so if building is shorter than the current tallest but is "behind" it, it wont be hit by shadow
     for (int i = 0; i < count; i++) {
       // same logic as first loop
       while (!isSetEmpty(b) && input[i] >= input[topOfTheSet(b)]) {
