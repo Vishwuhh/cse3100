@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Lecture1.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="intro-to-processes">Intro to Processes</h1>
+<h2 id="proccess-basics">Proccess Basics</h2>
+<ul>
+<li>process = instance of program being executed
+<ul>
+<li>core concept in operating systems
+<ul>
+<li>multiprocessing OS can have multiple programs happen at the same time <strong>OR</strong> multiple instances of the same program happening at the same time</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>executing multiple programs
+<ul>
+<li>single-core uses time sharing</li>
+<li>multi-core has parallelism and timesharing</li>
+</ul>
+</li>
+</ul>
+<h2 id="proccess-management-os-view">Proccess Management: OS View</h2>
+<ul>
+<li>OS's have a proccess table
+<ul>
+<li>every proccess has a <strong>proccess control block (PCB)</strong></li>
+</ul>
+</li>
+<li>OS scheduler <em>picks proccess to execute</em> at any time
+<ul>
+<li>suspended proccesses are saved in PCB</li>
+</ul>
+</li>
+</ul>
+<h2 id="paged-virtual-memory">Paged Virtual Memory</h2>
+<ul>
+<li>physical memory is <strong>shared</strong> across <strong>all procceses</strong></li>
+<li>page table maps virutal addresses to physical addresses
+<ul>
+<li>multiple virtual pages can be mapped to the <strong>same</strong> physical pages</li>
+</ul>
+</li>
+</ul>
+<h2 id="proccess-management-users-view">Proccess Management: User's View</h2>
+<ul>
+<li>events can cause proccess creation
+<ul>
+<li>system initialization</li>
+<li>user request to create a new proccess (ex. <strong>shell command</strong>)</li>
+<li>executing <strong>shell script</strong>, which can create many proccesses</li>
+</ul>
+</li>
+<li>events that can cause <em>termination</em>
+<ul>
+<li>normal program exit</li>
+<li>error exit</li>
+<li>fatal error (ex. segementation fault)</li>
+<li>filled by user command or signal
+<ul>
+<li>Ctrl+C</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="user-command">User Command</h2>
+<ul>
+<li>ps
+<ul>
+<li>lists running proccesses</li>
+</ul>
+</li>
+<li>pstree
+<ul>
+<li>shows the <strong>tree</strong> of proccesses</li>
+</ul>
+</li>
+<li>top
+<ul>
+<li>dynamic view of the memory and CPU usage
+<ul>
+<li>also shows proccesses that use the most resources</li>
+<li>press q to exit top</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>kill
+<ul>
+<li>kills a process given <strong>process ID</strong></li>
+<li>-9 is an option to do a simple kill</li>
+</ul>
+</li>
+</ul>
+<h2 id="proccess-management-programmers-view">Proccess Management: Programmer's View</h2>
+<ul>
+<li>process birth
+<ul>
+<li>new proccesses are made from other proccesses</li>
+<li>process starts as a <strong>clone</strong> of its parent process
+<ul>
+<li>can <strong>upgrade itself</strong> to run a different executable as needed
+<ul>
+<li>can retain access to the files open in the parent</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>process life
+<ul>
+<li>can create its own child proccesses as well</li>
+</ul>
+</li>
+<li>proccess death
+<ul>
+<li>can call <strong>exit</strong> or <strong>abort</strong> to end itself, or can get killed by user</li>
+</ul>
+</li>
+</ul>
+<h2 id="birth-via-cloning">Birth via Cloning</h2>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">pid_t</span> <span class="hljs-title">fork</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>;
+</div></code></pre>
+<ul>
+<li>function above is to create a <strong>new process</strong> in the code</li>
+<li>child is an exact copy of the parent
+<ul>
+<li>both return from fork()</li>
+</ul>
+</li>
+<li>the difference is the <em>returned value</em>
+<ul>
+<li>parent proccess
+<ul>
+<li>fork() returns the proccess identifier of the child (&gt;0)
+<ul>
+<li><strong>this is the proccess id of the process</strong></li>
+</ul>
+</li>
+<li>when falures happen, it returns -1 and sets the errno</li>
+</ul>
+</li>
+<li>child proccess
+<ul>
+<li>fork() returns <strong>just zero</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="concurrency">Concurrency</h2>
+<ul>
+<li><strong>parent and child</strong> proccess reutrn from fork concurrently
+<ul>
+<li>can return at the same tieme on a multicore machine, or one after the other</li>
+<li><strong>cannot</strong> assume they reuturn at the same time or which returns first -&gt; order is chosen by the <em>OS scheduler</em></li>
+</ul>
+</li>
+</ul>
+<h2 id="cloning-effect">Cloning effect</h2>
+<ul>
+<li>on memory
+<ul>
+<li>parent and child memory is 100% identitcal, but viewed as <em>distinct</em> according to OS</li>
+<li>memory changes (stack/heap) only affects that copy -&gt; parent and child can diverge</li>
+</ul>
+</li>
+<li>on file
+<ul>
+<li>all files open in the parent are <strong>accessible</strong> to the child</li>
+<li>i/o operations in one would move the file position indicator
+<ul>
+<li><strong>stdin, stdout, and stderr</strong> of the parent is accessible to the children</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="what-can-the-parent-do">What can the parent do?</h2>
+<ul>
+<li>depends on application
+<ul>
+<li>can wait until child is done, so it dies
+<ul>
+<li>shells like bash/ksh/zsh/csh</li>
+</ul>
+</li>
+<li>can run concurrently and check on child later <em>or</em> could ignore the child
+<ul>
+<li>when child dies, it becomes a <strong>zombie</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="waiitng-on-a-child">Waiitng on a child</h3>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/wait.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">pid_t</span> <span class="hljs-title">wait</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *status)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">pid_t</span> <span class="hljs-title">waitpid</span><span class="hljs-params">(<span class="hljs-keyword">pid_t</span> pid, <span class="hljs-keyword">int</span> *status, <span class="hljs-keyword">int</span> options)</span>
+</span></div></code></pre>
+<ul>
+<li>purpose
+<ul>
+<li>blocks the calling proccess untl the child is terminated
+<ul>
+<li>also until other state changes happen</li>
+</ul>
+</li>
+<li>report status in *status
+<ul>
+<li>is ignored if NULL is passed</li>
+<li>shows the cause of death and the exit status of the child</li>
+</ul>
+</li>
+<li>return value identifies the child proccesses</li>
+</ul>
+</li>
+<li>run &quot;<strong>man -S2 wait</strong>&quot; for the full details</li>
+</ul>
+<h3 id="zombies">Zombies</h3>
+<ul>
+<li>dead proccesses waiting to be checked by its parent
+<ul>
+<li>cannot be killed, and while it released <em>most</em> of its resources, it still has an entry in the proccess table</li>
+</ul>
+</li>
+<li>parents should check on kids
+<ul>
+<li>some systems can have parents not check on kids</li>
+</ul>
+</li>
+<li>'init' becomes the <em>new parent</em> if a parent dies to the kids
+<ul>
+<li>children are reaped afterwards</li>
+</ul>
+</li>
+</ul>
+<h2 id="system-calls">System calls</h2>
+<ul>
+<li>APIs used to request services from OS kernel
+<ul>
+<li>fork()</li>
+<li>system calls <em>are more expensive</em> than normal function calls
+<ul>
+<li>manual calls are in section 2</li>
+</ul>
+<pre class="hljs"><code><div>man -S2 intro ; man -S2 syscalls
+</div></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="virtual-memory">Virtual Memory</h3>
+<ul>
+<li>parent and child might have same information, but have <strong>different memory locations</strong>
+<ul>
+<li>stored in virtual memory
+<ul>
+<li>to safeguard actual RAM and memories</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">if</span> (fork() == <span class="hljs-number">0</span>) {
+    a++;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Child process: a = %10d, &amp;a = %p\n"</span>, a, &amp;a);
+  } <span class="hljs-keyword">else</span> {
+    a--;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Parent process: a = %10d, &amp;a = %p\n"</span>, a, &amp;a);
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<ul>
+<li>example of memory divergence
+<ul>
+<li>the child increments its local version of a, but the parent <em>decrements</em> its a
+<ul>
+<li>both originally had the same values</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="paradox-of-the-memory-address-a">Paradox of the Memory Address (&amp;a)</h4>
+<ul>
+<li>the <em>hexadecimal address</em> is the same for both parent and child
+<ul>
+<li>address %p prints the *<em>virtual address</em> instead of the physical RAM location
+<ul>
+<li>since the child is a clone, its virtual address is mapped identically to its parent
+<ul>
+<li><strong>they think that a is in the same spot on <em>both</em> maps</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>OS page table would map these virtual addresses to <strong>different physical locations</strong> on the RAM</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Process</th>
+<th>Value of a</th>
+<th>Memory Address (&amp;a)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Child</td>
+<td>1</td>
+<td>0x7ffee123</td>
+</tr>
+<tr>
+<td>Parent</td>
+<td>-1</td>
+<td>0x7ffee123</td>
+</tr>
+</tbody>
+</table>
+<h1 id="summary">Summary</h1>
+<ul>
+<li>a = fork()
+<ul>
+<li>parent: a &gt; 0 and is <strong>equal to</strong> child proccess id (PID)</li>
+<li>child: a = 0</li>
+</ul>
+</li>
+</ul>
+<h1 id="examples">Examples</h1>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/wait.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">int</span> a = fork(); <span class="hljs-comment">// part 1</span>
+  <span class="hljs-keyword">int</span> b = fork(); <span class="hljs-comment">// part 2</span>
+
+  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"a = %d,b=%d,pid = %d\n"</span>, a, b, getpid());
+  <span class="hljs-keyword">if</span> (a &gt; <span class="hljs-number">0</span> &amp;&amp; b &gt; <span class="hljs-number">0</span>) {
+		waitpid(a,<span class="hljs-literal">NULL</span>,<span class="hljs-number">0</span>);
+		waitpid(b,<span class="hljs-literal">NULL</span>,<span class="hljs-number">0</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"The main process 1, the god father\n"</span>);
+  }
+	<span class="hljs-keyword">if</span>(a==<span class="hljs-number">0</span>){
+		<span class="hljs-keyword">if</span>(b==<span class="hljs-number">0</span>){
+			<span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is process 4\n"</span>);
+		}
+		<span class="hljs-keyword">if</span>(b&gt;<span class="hljs-number">0</span>){
+			<span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is process 2\n"</span>);
+		}
+	}
+	<span class="hljs-keyword">if</span>(a&gt;<span class="hljs-number">0</span> &amp;&amp; b==<span class="hljs-number">0</span>){
+		<span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is process 3\n"</span>);
+	}	
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<ul>
+<li>forking operations
+<ul>
+<li>first fork()
+<ul>
+<li>for int a, clones the original proccess leaving <strong>two processes</strong> active</li>
+</ul>
+</li>
+<li>second fork()
+<ul>
+<li>for int b, clones the two processes from 1 into <strong>four processes</strong> in total</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>proccess identification
+<ul>
+<li>Parent
+<ul>
+<li>fork() returns the PID of the <em>child</em>, which is a value &gt; 0</li>
+</ul>
+</li>
+<li>Child
+<ul>
+<li>fork() returns zero</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>waitpid()
+<ul>
+<li>ensures that process 1 stays active <em>until</em> the children finish</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Process</th>
+<th>Variable a</th>
+<th>Variable b</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Process 1</td>
+<td>&gt; 0 (PID of P2)</td>
+<td>&gt; 0 (PID of P3)</td>
+<td>Original Parent</td>
+</tr>
+<tr>
+<td>Process 2</td>
+<td>0</td>
+<td>&gt; 0 (PID of P4)</td>
+<td>First fork; parent of P4</td>
+</tr>
+<tr>
+<td>Process 3</td>
+<td>0 (PID of P2)</td>
+<td>0</td>
+<td>Second fork from P1</td>
+</tr>
+<tr>
+<td>Process 4</td>
+<td>0</td>
+<td>0</td>
+<td>Second fork from P2</td>
+</tr>
+</tbody>
+</table>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/wait.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is a demonstration\n"</span>); <span class="hljs-comment">// beginning of code</span>
+  <span class="hljs-keyword">int</span> a = fork();
+  <span class="hljs-keyword">if</span> (a == <span class="hljs-number">0</span>) {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is in child process\n"</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Child process id = %d\n"</span>, getpid());
+  }
+  <span class="hljs-keyword">if</span> (a &gt; <span class="hljs-number">0</span>) {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"This is in parent process\n"</span>);
+    waitpid(a, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Parent process id = %d\n"</span>, getpid());
+  }
+
+  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Bye!\n"</span>);
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<ul>
+<li>
+<p>intialization</p>
+<ul>
+<li>the program starts as a single process and prints &quot;This is a demonstration&quot;</li>
+</ul>
+</li>
+<li>
+<p>fork() call</p>
+<ul>
+<li>proccess clones itself, with both proccesses return from fork() <strong>concurrently</strong>
+<ul>
+<li>parent
+<ul>
+<li>a contains the Process ID of the child (value &gt; 0)</li>
+</ul>
+</li>
+<li>child
+<ul>
+<li>a is exactly zero</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>child branch (when a == 0)
+<ul>
+<li>child enters the first if block
+<ul>
+<li>prints &quot;this is in a child process&quot; and its PID with <em>getpid()</em></li>
+</ul>
+</li>
+<li>skips the if(a &gt; 0) block and prints &quot;Bye!&quot; before exiting</li>
+</ul>
+</li>
+<li>parent branch (when a &gt; 0)
+<ul>
+<li>parent enters the second if block
+<ul>
+<li>prints &quot;this is in parent proccess&quot;</li>
+<li>waitpid(a, NULL, 0)
+<ul>
+<li>pauses at this line until the child process terminates</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>once child dies, the parent is unblocked
+<ul>
+<li>prints its PID and then prints &quot;Bye!&quot;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>key observations</p>
+<ul>
+<li><strong>order of output</strong> is sealed with waitpid() for the parent
+<ul>
+<li>ensures that the child's output is always first</li>
+<li>would be <em>random</em> if waitpid() wasn't used</li>
+</ul>
+</li>
+<li>while the child is a clone, because it is attached to a different virtual memory address, any changes to parent <strong>only affects the parent</strong></li>
+<li>parent is able to &quot;reap&quot; the child proccess, with helps stop the child from being a zombie</li>
+</ul>
+</li>
+</ul>
+<h2 id="fork-treasure-hunt">Fork Treasure Hunt</h2>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;assert.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/types.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/wait.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span> </span>{
+
+  <span class="hljs-keyword">if</span> (argc != <span class="hljs-number">2</span>) {
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Usage: %s n\n"</span>, argv[<span class="hljs-number">0</span>]);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+  }
+
+  <span class="hljs-keyword">int</span> n = atoi(argv[<span class="hljs-number">1</span>]);
+  assert(n &gt;= <span class="hljs-number">1</span> &amp;&amp; n &lt;= <span class="hljs-number">10</span>);
+
+  <span class="hljs-keyword">int</span> *a = <span class="hljs-built_in">calloc</span>(n, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>)); <span class="hljs-comment">// allocates array a of size n with calloc (all elements are zero)</span>
+
+  srand(<span class="hljs-number">12345</span>);
+  <span class="hljs-keyword">int</span> idx = rand() % n; <span class="hljs-comment">// picks random idx and sets a[idx] = 1 (the treasure)</span>
+  <span class="hljs-keyword">pid_t</span> pid = getpid(); 
+  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Treasure hidden at %d in array %p pid = %d\n"</span>, idx, a, pid); <span class="hljs-comment">// prints memory address of the array %p and the current proccess id getpid()</span>
+  a[idx] = <span class="hljs-number">1</span>;
+
+  <span class="hljs-keyword">int</span> cur = <span class="hljs-number">0</span>;
+
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) { <span class="hljs-comment">// runs up to n times, with a fork() happening every increment of n</span>
+    <span class="hljs-keyword">pid_t</span> pid;
+    pid = fork();
+    <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) { <span class="hljs-comment">// child proccess starts as an exact copy of parent </span>
+      <span class="hljs-keyword">if</span> (a[cur]) { <span class="hljs-comment">// checks array at the current index a[cur]</span>
+        <span class="hljs-built_in">printf</span>(
+            <span class="hljs-string">"Systematic search found the treasure at %d in array %p pid = %d\n"</span>,
+            cur, a, getpid()); <span class="hljs-comment">// prints the message of success and stops loop</span>
+        <span class="hljs-keyword">break</span>;
+        ;
+      }
+      cur++; <span class="hljs-comment">// increments cur and continutes to the next iteration and fork --&gt; child has its own copy of the cur variable </span>
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-comment">// wait for the child process to finish</span>
+      waitpid(pid, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>);
+      <span class="hljs-keyword">int</span> guess = rand() % n;
+      <span class="hljs-keyword">if</span> (a[guess]) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Random search found the treasure at %d in array %p pid = %d\n"</span>,
+               guess, a, getpid());
+        <span class="hljs-keyword">break</span>;
+        ;
+      }
+    }
+  }
+  <span class="hljs-built_in">free</span>(a);
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<ul>
+<li>key takeaway
+<ul>
+<li>systematic search is performed through a <strong>chain of descendants</strong>
+<ul>
+<li>process 1 creates process 2 (checks index 0), ... , process n creates process (n+1) for index (n-1)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</body>
+</html>
