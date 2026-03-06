@@ -6,24 +6,23 @@
 
 int main(int argc, char ** argv)
 {
-    pid_t child;
+    pid_t child = fork();
     int exitStatus;
 
     // at least, there should be 3 arguments
     // 2 for the first command, and the rest for the second command
-    pid_t pid_1 = fork();
-    if(pid_1 == 0) { 
+    if(child == 0) { 
     excelp(argv[1], argv[1], argv[2], NULL);
     perror("excelp()");
     exit(1);
     }
-    else if (pid_1 < 0) {
+    else if (child < 0) {
         perror("fork()");
         exit(1);
     }
 
     int status;
-    waitpid(pid_1, &status, 0); 
+    waitpid(child, &status, 0); 
 
     pid_t pid_2 = fork();
     if(pid_2 == 0) {
@@ -43,7 +42,7 @@ int main(int argc, char ** argv)
         fprintf(stderr, "Usage: %s cmd1 cmd1_arg cmd2 [cmd2_args ..]\n", argv[0]);
         return 1;
     }
-    
+
     printf("exited=%d exitstatus=%d\n", WIFEXITED(status), WEXITSTATUS(status));
     printf("exited=%d exitstatus=%d\n", WIFEXITED(status2), WEXITSTATUS(status2));
 
