@@ -9,8 +9,8 @@ int main(int argc, char ** argv)
     pid_t child = fork();
     int exitStatus;
 
-
-    if (argc < 4) {
+    // moved since it could cause a SegFault
+    if (argc < 4) { 
         fprintf(stderr, "Usage: %s cmd1 cmd1_arg cmd2 [cmd2_args ..]\n", argv[0]);
         return 1;
     }
@@ -32,7 +32,7 @@ int main(int argc, char ** argv)
 
     printf("exited=%d exitstatus=%d\n", WIFEXITED(status), WEXITSTATUS(status));
 
-    pid_t pid_2 = fork();
+    pid_t pid_2 = fork(); // new fork for a different operation
     if(pid_2 == 0) {
         execvp(argv[3], &argv[3]);
         perror("execvp()");
