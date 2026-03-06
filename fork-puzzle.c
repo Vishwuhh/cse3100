@@ -20,9 +20,10 @@
 #include <unistd.h>
 #include <assert.h>
 #include <sys/wait.h>
+
 void print_solution(int b[], int moves)
 {
-    for(int k = 0; k<moves; k++)
+    for(int k = 0; k < moves; k++)
     {
         printf("->%d ", b[k]);
     }
@@ -31,61 +32,60 @@ void print_solution(int b[], int moves)
 
 int main(int argc, char *argv[])
 {
-    //We use the array a to describe the puzzle
     int a[] = {3, 6, 4, 1, 3, 4, 2, 5, 3, 0};
-    //We use the array b to save the moves the walker makes
-    //Essentially, we save each index that the walker reaches in array b
-    //For example, b[0] = 3 since the walker goes to index 3 for the first move
     int b[10];    
     int cur = 0;
     int moves = 0;
-
     int n = 10;
 
-    for(int i = 0; i< n; i++)
+    for(int i = 0; i < n; i++)
     {
-		pid_t pid;
-    	pid = fork();
+        pid_t pid;
+        pid = fork();
         if(pid == 0)
         {   
-            //If we find a solution, we print the solution 
-            if(a[cur]==0)
+            // If we find a solution, we print and exit this branch
+            if(a[cur] == 0)
             {
                 b[moves - 1] = cur;
                 print_solution(b, moves);
                 return 0;
             }
-            else if(cur + a[cur] >= 0 && cur + a[cur] <n)
+            // MOVE RIGHT logic
+            else if(cur + a[cur] >= 0 && cur + a[cur] < n)
             {
-                // advances the moves to the right and updates curr and moves
-                cur = cur + a[cur];
-                b[moves] = cur;
-                moves++;
+                cur = cur + a[cur]; // Update position
+                b[moves] = cur;     // Record position in history
+                moves++;            // Increment move count
             }
-            else {
+            else 
+            {
+                // If the move is out of bounds, stop this process
                 exit(0);
             }
         }
         else
         {
-			int status;
-			//wait for the child process to finish
-			waitpid(pid, &status, 0);
-            //If we find a solution, we print the solution
-            if(a[cur]==0)
+            int status;
+            waitpid(pid, &status, 0);
+            
+            // If we find a solution, we print and exit this branch
+            if(a[cur] == 0)
             {
                 b[moves - 1] = cur;
                 print_solution(b, moves);
                 return 0;
             }
-            else if(cur - a[cur] >= 0 && cur - a[cur] <n)
+            // MOVE LEFT logic
+            else if(cur - a[cur] >= 0 && cur - a[cur] < n)
             {
-              // advances moves to the left and updates cur and moves
-              cur = cur - a[cur];
-              b[moves] = cur;
-              moves++;
+                cur = cur - a[cur]; // Update position
+                b[moves] = cur;     // Record position in history
+                moves++;            // Increment move count
             }
-            else {
+            else
+            {
+                // If the move is out of bounds, stop this process
                 exit(0);
             }
         }
