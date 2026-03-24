@@ -106,12 +106,62 @@ void run_simlation(int n, double p) { // need two pipes per child (one to send c
 
   // creating Player A
   if(fork() == 0) {
-    srand(time(NULL)^(getpid() << 16));
+    srand(time(NULL)^(getpid() << 16)); // seeds random generator for the process
     int cmd, res;
-
-    while(read(P_to_pA[0], &cmd, sizeof(int)) > 0) {
-      res = ((double)rand() / RAND_MAX)
+    // blocks the child process until parent is done
+    // parent will write to P_to_pA[1] the vale of 1
+    while(read(P_to_pA[0], &cmd, sizeof(int)) > 0) { // reads from pipe A what the parent says
+      res = ((double)rand() / RAND_MAX) ? 1 : 0; // short hand for an if-else statement 
+      // ssize_t write(int fd, const void *buf, size_t count)
+      // *buf is a pointer to the location of where the data currently is
+      // size_t count is the sexact number of bytes to cound (can use sizeof() in this)
+      write(P_to_pA[1], &res, sizeof(int)); // writes to pipe A
     }
+    exit(0);
   }
+  if(fork() == 0) {
+    srand(time(NULL)^(getpid() << 16)); // seeds random generator for the process
+    int cmd, res;
+    // blocks the child process until parent is done
+    // parent will write to P_to_pB[1] the value of 1
+    while(read(P_to_pB[0], &cmd, sizeof(int)) > 0) { // reads from pipe B what the parent says
+      res = ((double)rand() / RAND_MAX) ? 1 : 0; 
+      write(P_to_pB[1], &res, sizeof(int)); // writes to pipe B
+    }
+    exit(0);
+  }
+
+  int a_wins = 0;
+  for(int i - 0; i < n; i++) { // loops for n rounds
+    while(1) { // loops within a round until someone gets a head
+      int signal = 1;
+      // parent signals to A
+      write(P_to_pA[1], &signal, sizeof(int)); 
+      int resA;
+      read(pA_to_P[0], &resA, sizeof(int));
+      if(resA == 1) { // increases the wins for A by 1, and ends the cycle
+        a_wins++;
+        break;
+      }
+      // occurs if A gets a tail, so B automatically wins
+      write(P_to_pB[1], &signal, sizeof(int));
+      int resB;
+      read(pB_to_P[0], &resB, sizeof(int));
+      if(resB == 1) {
+        break; //exits the loop because round is over
+      }
+    } 
+  }
+  // closes the write end of the command pipes
+  // sends end of file signal to children
+  close(P_to_pA[1]);
+  close(P_to_pB[1]);
+  // waits for the children to see the signal, finishing their loops, and exits
+  // prevents zombification
+  wait(NULL);
+  wait(NULL);
+  // closes the read ends of the parents
+  close(pA_to_P[0]);
+  close(pB_to_P[0]);
 }
 ```
