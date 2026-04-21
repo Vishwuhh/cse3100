@@ -94,5 +94,49 @@ int main(int argc, char* argv[]) {
   - need coordinations!
     - rules and protocols
     - establishes how to share data safely and keep everyone happy 
-## Road Aheasd
-- 
+## Road Ahead
+- define PROTOCOLS and DATA STRUCTURES to share
+- examples
+  - mutex/spinlocks
+  - conditions
+  - semaphores
+  - barriers
+  - producer/consumer
+  - reader/writer
+  - etc.
+## How Unsafe?
+- *subtle issues*
+  - it can be very easy to get wrong
+- good multi-threading programming practices need to be followed
+  - good code, practice, synchronization, and low overhead
+
+## Detaching a Thread
+```C
+int pthread_detach(pthread_t tid)
+```
+- parent thread doesn't need to wait
+- threads can detach other threads, and when a detached thread terminates, its resources are released
+```C
+pthread_detach(pthread_self())
+```
+- threads creates as **joinable** and not detached can be joined
+
+## Passing Arguments to Threads - 1
+```C
+#define NUM_THREADS 8
+
+struct thread_data{
+  int thread_num;
+  char* message;
+};
+
+void* PrintHellp(void* threadarg) {
+  struct thread_data* my_data = (struct thead_data*) threadarg;
+
+  sleep(1 + 5*(my_data -> thread_num % 2));
+
+  printf("thread #%d: %s length=%zd\n", my_data -> thread_num, my_data -> message);
+
+  pthread_exit(NULL);
+}
+```
