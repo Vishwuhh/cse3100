@@ -1,6 +1,7 @@
 /*
  ** server.c -- a stream socket server demo
  */
+#define _GNU_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -176,44 +177,50 @@ void * thread_main(void * arg_in)
 
     gmn_init(&gmn, arg->random_value);
 
-   char buf[MSG_BUF_SIZE];
-    int n;
+    // TODO
+    char buf[MSG_BUF_SIZE + 10]; // Buffer large enough for responses
 
-    int max = gmn_get_max();
-    n = snprintf(buf, sizeof(buf), "%d\n", max);
-    if (send_all(sockfd, buf, n) < 0) goto cleanup;
+    // Send max value
+    snprintf(buf, sizeof(buf), "%d\n", gmn_get_max());
+    if (send_str(sockfd, buf) < 0) {
+        close(sockfd);
+        free(arg);
+        return NULL;
+    }
 
-    int result = -1;
+    // Repeat the following until guess is correct
+    while (1) {
+        // Wait for a guess 
+        if (recv_lines(sockfd, buf, sizeof(buf)) < 0) {
+            break; // Break on error or disconnect
+        }
 
-    while (result != 0) {
-        
-        // Wait for a guess from the client
-        if (recv_lines(sockfd, buf, sizeof(buf)) < 0) goto cleanup;
-        
-        // Parse the guess from the received string
         int guess;
-        if (sscanf(buf, "%d\n", &guess) != 1) goto cleanup;
+        if (sscanf(buf, "%d", &guess) != 1) {
+            continue; // Ignore malformed inputs
+        }
 
-        // Call gmn_check() to grade the guess
-        result = gmn_check(&gmn, guess);
+        // Call gmn_check()
+        int res = gmn_check(&gmn, guess);
 
-        // 3. Send the result back
-        if (result != 0) {
-            // Just send the numeric result and a newline
-            n = snprintf(buf, sizeof(buf), "%d\n", result);
-            if (send_all(sockfd, buf, n) < 0) goto cleanup;
+        // Send the result and, if the guess is correct, send the final message
+        if (res == 0) {
+            // "0" (without newline) followed by the final message [cite: 30]
+            snprintf(buf, sizeof(buf), "0%s", gmn_get_message(&gmn));
+            send_str(sockfd, buf);
+            break;
         } else {
-            // VICTORY: Send the numeric result, a newline, AND the final message
-            n = snprintf(buf, sizeof(buf), "%d\n%s", result, gmn_get_message(&gmn));
-            if (send_all(sockfd, buf, n) < 0) goto cleanup;
+            // Send 1 or -1 with a newline [cite: 16, 20]
+            snprintf(buf, sizeof(buf), "%d\n", res);
+            if (send_str(sockfd, buf) < 0) {
+                break;
+            }
         }
     }
 
-
-cleanup:
+    // Clean up: close FD and free memory.
     close(sockfd);
     free(arg);
-
     return NULL;
 }
 
