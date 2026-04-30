@@ -1,6 +1,7 @@
 /*
  ** client.c -- a stream socket client demo
  */
+#define _GNU_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
