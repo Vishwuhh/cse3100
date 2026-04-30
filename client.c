@@ -1,20 +1,16 @@
-/*
- ** client.c -- a stream socket client demo
- */
-#define _GNU_SOURCE
+#define _GNU_SOURCE // MUST BE LINE 1
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-#include <netdb.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <time.h>
-
 #include <arpa/inet.h>
+#include <time.h>
 
 #define PORT "3119" // the port client will be connecting to 
 
@@ -121,50 +117,53 @@ int main(int argc, char *argv[])
     int min = 1, max, guess;
     int result = 0;
 
-    if (recv_lines(sockfd, buf, LINE_SIZE) < 0) {
-        die("Failed to receive max value");
-    }
-    
-    if (get_number(buf, &max) < 0) {
-        die("Failed to parse max value");
-    }
+    char recv_buf[LINE_SIZE];
 
-    do {
-        // Calculate the guess using binary search
-        guess = (min + max) / 2;
+    // Get max
+    if (recv_lines(sockfd, recv_buf, sizeof(recv_buf)) < 0) {
+        fprintf(stderr, "Failed to receive max value.\n");
+        close(sockfd);
+        return 1;
+    }
+    printf("%s", recv_buf);
+    get_number(recv_buf, &max);
+
+    // Repeat the following until result is 0
+    while (1) {
+        // Calculate guess using binary search formula
+        guess = min + (max - min) / 2;
         printf("My guess: %d\n", guess);
-
-        // Send the guess to the server. 
-        if (send_int(sockfd, guess) < 0) {
-            die("Failed to send guess");
-        }
-
-        // Wait for the result from the server
-        if (recv_lines(sockfd, buf, LINE_SIZE) < 0) {
-            die("Failed to receive result");
-        }
         
-        // Parse the result out of the buffer
-        if (sscanf(buf, "%d\n", &result) != 1) {
-            die("Failed to parse result");
+        // Send guess 
+        if (send_int(sockfd, guess) < 0) {
+            break;
         }
 
-        // Print the server's numeric response (-1, 1, or 0)
-        printf("%d\n", result);
+        // Receive result
+        if (recv_lines(sockfd, recv_buf, sizeof(recv_buf)) < 0) {
+            break;
+        }
 
-        // Adjust bounds or handle victory
-        if (result > 0) {
-            min = guess + 1;
-        } else if (result < 0) {
-            max = guess - 1;
+        // Check if the game is over.
+        // S sends "0" (without newline) followed by the final message
+        if (recv_buf[0] == '0') {
+            // Print the received 0 on a separate line, then print the final message
+            printf("0\n%s", recv_buf + 1); 
+            break;
         } else {
-            char *msg = strchr(buf, '\n');
-            if (msg != NULL && *(msg + 1) != '\0') {
-                printf("%s", msg + 1); // Print everything after the first newline
+            // Print out the 1 or -1
+            printf("%s", recv_buf);
+            
+            get_number(recv_buf, &result);
+            
+            // Adjust min or max if necessary
+            if (result == 1) { // 1 means guess is smaller than the target
+                min = guess + 1;
+            } else if (result == -1) { // -1 means guess is larger than the target
+                max = guess - 1;
             }
         }
-        
-    } while (result != 0);
+    }
 
     close(sockfd);
     return 0;
