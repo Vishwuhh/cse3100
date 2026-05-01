@@ -1,0 +1,53 @@
+# Multiple Choice Review
+- Q1: What is the primary role of port numbers in network communication?
+  - ANSWER: A 
+    - **Port numbers allow a server to offer multiple services simultaneously, each associated with a specific port.**
+  - port numbers are used by the transport layer to demultiplex traffic, allowing a signle server to run multiple devices simultaneously
+- Q2: Can a mutex be used to achieve the same synchronization as the barrier in this code?
+  - ANSWER: B
+    - **Yes, a mutex can achieve the same synchronization if used with a condition variable.**
+  - mutex alone provides only mutual exclusion, so it prevents concurrent access to ciritcal code sections
+    - *cannot* make a thread wait for a specific state
+  - a barrier that makes threads waits for others to arrive needs a conditional variable 
+    - makes then skeeo and be ginaled to wake once a condition is met
+- Q3: Fill in the line of code below
+  - ANSWER: **pthread_cond_broadcast(&cond_var)**
+  - provided code has multiple worker threads stuck in a while() loop
+    - waiitng on cond_var for the count variable to change
+  - main thread updates count to equal the number of threads and then prints a ready msg
+    - main needs to use pthread_cond_broadcast() to wake up *all* the threads at the same time
+      - pthread_cond_signal would wake up only one specified thread
+- Q4: For all the threads that wait on a barrier by calling the function, only one of them gets a nonzero return value
+  - ANSWER: **TRUE** 
+  - the POSIX standard says when threads successfully ait with pthread_barrier_wait(), only one thread will retain the PTHREAD_BARRIER_SERIAL_THREAD const as a *return value*
+    - all other threads will return a value of 0
+    - designed so that a single thread is assigned cleanup or setup actions beyond sychonization
+- Q5: pthreads set errno on errors
+  - ANSWER: **FALSE**
+  - POSIX (pthread) functions return the error code *directly* as their int return value
+- Q6: Which of the following is not true about pthread_exit()?
+  - ANSWER: B
+    - **pthread exit() releases all mutexes automatically as it exits the threads.**
+  - pthread_exit() terminates the calling thread, but doesn't automatically release mutexes the thread was hold at the exit time
+    - without manually unlocking the mutex, it remains locked indefinitely after pthreaad_exit() is called, and leads to deadlock with other threads
+- Q7: What is the first parameter in socket() system call if the communication domain is IPv4 over TCP?
+  - ANSWER: **AF_INET**
+    - socket() system call takes the comms domain as its first argument
+      - AF_INET = Address Family - Internet, used for designating IPv4 network protocols 
+- Q8: Can we use fwrite() and fread() in place of send() and recv() for data transfer on SOCK_STREAM?
+  - ANSWER: **FALSE**
+  - send() and recv() funcs operation directly on raw FDs, and those are integers
+  - fread() and frite() funcs are I/O library funcs that operate of FILE* stream pointers
+    - cannot use them as direct relacements for send() and recv() without wrapping the socket FDs into a FILE* with a function like fdopen()
+- Q9: Your laptop is connected to UConn-Secure wifi, can it have more than one IP addresses?
+  - ANSWER: **YES**
+  - single network interface can hold multiple IP addresses at the same time, and is standard for modern devices to connect to an *enterprise network*
+    - can be assigned both an IPv4 and IPv6 adddress for the *same connection*
+  - OS systems also maintain a local loopback addr too (ex. 127.0.0.1)
+- Q10: Consider a multi-threaded tcp server, select the incorrect statement.
+  - ANSWER: B
+    - **send(), recv() are not blocking.**
+  - standard stream sockets are operating in blocking mode *by deafult*
+    - calls to recv() will block the thread until the data is fully recieved
+    - calls to send() will block if the socket's outgoing buffer is full
+  - *need to configure socket to be non-blocking for different behavior*

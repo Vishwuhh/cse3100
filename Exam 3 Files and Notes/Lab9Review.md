@@ -142,3 +142,48 @@ void *thread_main(void *arg_in) {
         return NULL;
 }
 ```
+## Going Deeper
+- client side analysis
+```C
+char *msg_start = strchr(buf, '\n');
+if(msg_start != NULL && *(msg_start +1) != '\0') {
+    printf("%s", msg_start + 1);
+}
+```
+  - how it works
+    - TCP = byte-stream protocol
+    - when player wins, server sends int '0' and the final message back-to-bacl
+      - TCP could send this as one chunk of data, where recv_lines reads it until it hits the newline delimiter
+        - this could lead to recv_lines pulling the *entire* chunk into the buffer
+    - strchr searches for the memory address of the first newline
+    - msg_start + 1 shifts pointer by one byte to the right
+      - prints everything *after* the newline delimiter
+  - pitfalls
+    - blocking recv()
+      - some might write logic that reads the 0, and then calls recv_lines() for a *second* time to get the string msg
+        - because the string was already pulled from the OS network buffer with the first call of recv_lines, the second call will block forever --> **client will hang**
+    - pointer arithmetic
+      - most forget the +1 for strchr, but forgetting it would also print the newline delimiter, which would print it before the final string
+        - would violate autograder requirements 
+- network error handling
+```C
+if(recv_lines(sockfd, buf, LINE_SIZE) < 0) {
+    die("Failed to recieve max val from server");
+}
+```
+  - how it works
+    - recv_lines and the recv calls return < 0 on network errors, or 0 if the server successflly closes the connection 
+  - pitfalls
+    - missing error checks
+      - writing recv_lines(sockds, buf, LINE_SIZE) without the if statement causes issues if the server crashes
+        - client would parse the garbage data leftover in the buffer, which leads to seg faults or unpredictable behavior in sscanf
+```C
+if(result > 0) {
+    min = guess + 1;
+} else if(result < 0) {
+    max = guess - 1;
+}
+```
+- pitfalls
+  - setting min = guess or max = guess leads to infinite loops
+    - 
