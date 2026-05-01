@@ -1,5 +1,4 @@
 # Sockets Programming: Client and Server
-
 - TCP/IP
   - name/IP (Internet Protocol) and port number
 - Socket

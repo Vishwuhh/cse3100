@@ -221,3 +221,42 @@ ssize_t recv(
 ```
 - recieves message from a *connected* socket, and returns bytes read
   - if 0 is returned, peer performed an orderly shutdown (disconnected)
+## Barriers
+In multithreading, a barrier is a synchronization point where a group of threads must stop and wait until all other threads in the group have also reached that exact same point. Only when the required number of threads has arrived does the barrier "open," allowing all of them to proceed simultaneously.
+
+If you think back to Question 2 on your exam, that pseudocode was manually building a barrier using a mutex and a condition variable. Pthreads actually has a built-in object called pthread_barrier_t that does this automatically.
+
+The Real-World Analogy
+Imagine you and four friends are meeting for dinner at a busy restaurant. You all agree on a rule: No one sits down at the table until everyone has arrived.
+
+You arrive first, so you wait in the lobby.
+
+Two more friends arrive. Now there are three of you waiting in the lobby.
+
+The fourth friend arrives. Still waiting.
+
+Finally, the fifth friend walks through the door. The "barrier" is met. The hostess immediately seats all five of you at exactly the same time.
+
+- initalization
+```C
+pthread_barrier_t my_barrier;
+// Initialize barrier to wait for exactly 5 threads
+pthread_barrier_init(&my_barrier, NULL, 5);
+```
+- waiting
+```C
+void *worker(void *arg) {
+    printf("Thread doing initial setup...\n");
+
+    // The thread hits this line and goes to sleep
+    pthread_barrier_wait(&my_barrier); 
+
+    printf("Thread crossing the barrier!\n");
+}
+```
+- manpage
+```C
+#include <pthread.h>
+
+int pthread_barrier_wait(pthread_barrier_t *barrier);
+```
